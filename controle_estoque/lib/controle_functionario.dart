@@ -16,8 +16,7 @@ double bonificarSalarioFuncionario(double salario, double valorBonus,
     [double valorLimiteBonus = 0.5]) {
   double limite = salario * valorLimiteBonus;
   if (valorBonus > limite) {
-    valorBonus = limite;
-    return salario + valorBonus;
+    return salario + limite;
   } else {
     return salario + valorBonus;
   }
@@ -56,3 +55,5 @@ double somarComissaoMetaBatida(double salario, double valorVendidoFuncionario,
     return salario;
   }
 }
+
+bool validarValorNegativo(double valor) => (valor < 0) ? false : true;

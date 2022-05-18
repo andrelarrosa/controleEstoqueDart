@@ -9,6 +9,27 @@ void show() {
   04 - Acrescer o valor de um produto
   05 - Acrescentar quantidade de um produto em estoque
   06 - Diminuir quantidade de um produto em estoque''');
+  int opcao = int.parse(stdin.readLineSync()!);
+  if (opcao != null) {
+    switch (opcao) {
+      case 1:
+        double valorCompra = double.parse(stdin.readLineSync()!);
+        double valorVenda = double.parse(stdin.readLineSync()!);
+        double rentabilidade =
+            calculoRentabilidadeProdutoSobreValor(valorVenda, valorCompra);
+        print(rentabilidade);
+        break;
+      case 2:
+        double valorCompra = double.parse(stdin.readLineSync()!);
+        double valorVenda = double.parse(stdin.readLineSync()!);
+        double rentabilidade =
+            calculoRentabilidadeProdutoPercentual(valorCompra, valorVenda);
+        print(rentabilidade);
+        break;
+    }
+  } else {
+    throw new Exception("Selecione uma opção válida!");
+  }
 }
 
 String interfaceProduto(double salario, double valor, Function function) {
@@ -17,7 +38,13 @@ String interfaceProduto(double salario, double valor, Function function) {
 
 double calculoRentabilidadeProdutoSobreValor(
     double valorCompra, double valorVenda) {
-  return valorCompra - valorVenda;
+  bool isPositive =
+      (validarValorNegativo(valorCompra) && validarValorNegativo(valorVenda));
+  if (isPositive) {
+    return valorCompra - valorVenda;
+  } else {
+    throw new Exception("Um dos valores é negativo");
+  }
 }
 
 double calculoRentabilidadeProdutoPercentual(
@@ -63,3 +90,5 @@ double diminuirQuantidadeEstoque(
   }
   return quantidadeDiminuicao + quantidadeAtual;
 }
+
+bool validarValorNegativo(double valor) => (valor < 0) ? false : true;
