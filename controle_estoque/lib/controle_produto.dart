@@ -36,6 +36,7 @@ String interfaceProduto(double salario, double valor, Function function) {
   return function();
 }
 
+// Rentabilidade do produto com o valor em dinheiro
 double calculoRentabilidadeProdutoSobreValor(
     double valorCompra, double valorVenda) {
   bool isPositive =
@@ -47,12 +48,15 @@ double calculoRentabilidadeProdutoSobreValor(
   }
 }
 
+// Rentabilidade do produto com o valor em percentual
 double calculoRentabilidadeProdutoPercentual(
     double valorCompra, double valorVenda) {
   double percentual = ((valorCompra / valorVenda) - 1) * 100;
   return percentual;
 }
 
+// adiciona desconto no valor da venda de um produto, se passar do valor limite
+// de desconto, pega o máximo de desconto possível
 double adicionarDescontoValorVenda(
     double valorVendaProduto, double valorDesconto,
     [double percentualValorLimite = 0.20]) {
@@ -64,6 +68,8 @@ double adicionarDescontoValorVenda(
   }
 }
 
+// O acrescimo no valor da venda de um produto, não pode passar do valor limite,
+// se passar, acrescenta o limite do valor
 double adicionarAcrescimoValorVenda(
     double valorVendaProduto, double valorAcrescimo,
     [double percentualValorLimite = 0.20]) {
@@ -75,6 +81,7 @@ double adicionarAcrescimoValorVenda(
   }
 }
 
+// acrescenta produtos em estoque
 double acrescentarQuantidadeEstoque(
     double quantidadeAtual, double quantidadeAcrescentada) {
   if (quantidadeAtual == null || quantidadeAcrescentada == null) {
@@ -83,6 +90,7 @@ double acrescentarQuantidadeEstoque(
   return quantidadeAcrescentada + quantidadeAtual;
 }
 
+// diminui produtos em estoque
 double diminuirQuantidadeEstoque(
     double quantidadeAtual, double quantidadeDiminuicao) {
   if (quantidadeAtual == null || quantidadeDiminuicao == null) {
