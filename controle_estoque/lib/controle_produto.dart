@@ -13,18 +13,69 @@ void show() {
   if (opcao != null) {
     switch (opcao) {
       case 1:
+        print("Informe o valor da compra do produto: ");
         double valorCompra = double.parse(stdin.readLineSync()!);
+        print("Informe o valor de venda do produto: ");
         double valorVenda = double.parse(stdin.readLineSync()!);
-        double rentabilidade =
-            calculoRentabilidadeProdutoSobreValor(valorVenda, valorCompra);
-        print(rentabilidade);
+        double resultado = calculoRentabilidadeProdutoSobreValor(
+            valorVenda, valorCompra,
+            validacao: (double valorVenda, double valorCompra) =>
+                (valorVenda < 0 && valorCompra < 0) ? false : true);
+        print("A rentabilidade do produto é: ${resultado}");
         break;
       case 2:
+        print("Informe o valor da compra do produto: ");
         double valorCompra = double.parse(stdin.readLineSync()!);
+        print("Informe o valor de venda do produto: ");
         double valorVenda = double.parse(stdin.readLineSync()!);
-        double rentabilidade =
+        double resultado =
             calculoRentabilidadeProdutoPercentual(valorCompra, valorVenda);
-        print(rentabilidade);
+        print("A rentabilidade do produto é: ${resultado}");
+        break;
+      case 3:
+        print("Informe o valor da venda do produto: ");
+        double valorVendaProduto = double.parse(stdin.readLineSync()!);
+        print("Informe o valor do desconto do produto: ");
+        double valorDesconto = double.parse(stdin.readLineSync()!);
+        print("Informe o percentual máximo de desconto do produto: ");
+        double percentualValorLimite = double.parse(stdin.readLineSync()!);
+        double resultado = adicionarDescontoValorVenda(
+            valorVendaProduto, valorDesconto, percentualValorLimite);
+        print("O valor do produto agora é: ${resultado}");
+        break;
+      case 4:
+        print("Informe o valor da venda do produto: ");
+        double valorVendaProduto = double.parse(stdin.readLineSync()!);
+        print("Informe o valor de acréscimo do produto: ");
+        double valorAcrescimo = double.parse(stdin.readLineSync()!);
+        print("Informe o percentual máximo de acréscimo do produto: ");
+        double percentualValorLimite = double.parse(stdin.readLineSync()!);
+        double resultado = adicionarAcrescimoValorVenda(
+            valorVendaProduto, valorAcrescimo, percentualValorLimite);
+        print("O valor do produto agora é: ${resultado}");
+        break;
+      case 5:
+        print("Informe a quantidade atual de itens no estoque: ");
+        double quantidadeAtual = double.parse(stdin.readLineSync()!);
+        print("Informe a quantidade que deseja acrescentar no estoque: ");
+        double quantidadeAcrescentada = double.parse(stdin.readLineSync()!);
+        double resultado = acrescentarQuantidadeEstoque(
+            quantidadeAtual, quantidadeAcrescentada,
+            validacao:
+                (double quantidadeAtual, double quantidadeAcrescentada) =>
+                    (quantidadeAtual < 0 && quantidadeAcrescentada < 0)
+                        ? false
+                        : true);
+        print("A quantidade em estoque do produto agora é: ${resultado}");
+        break;
+      case 6:
+        print("Informe a quantidade atual de itens no estoque: ");
+        double quantidadeAtual = double.parse(stdin.readLineSync()!);
+        print("Informe a quantidade que deseja acrescentar no estoque: ");
+        double quantidadeDiminuicao = double.parse(stdin.readLineSync()!);
+        double resultado =
+            diminuirQuantidadeEstoque(quantidadeAtual, quantidadeDiminuicao);
+        print("A quantidade em estoque do produto agora é: ${resultado}");
         break;
     }
   } else {
@@ -32,19 +83,14 @@ void show() {
   }
 }
 
-String interfaceProduto(double salario, double valor, Function function) {
-  return function();
-}
-
 // Rentabilidade do produto com o valor em dinheiro
 double calculoRentabilidadeProdutoSobreValor(
-    double valorCompra, double valorVenda) {
-  bool isPositive =
-      (validarValorNegativo(valorCompra) && validarValorNegativo(valorVenda));
-  if (isPositive) {
+    double valorCompra, double valorVenda,
+    {required Function validacao}) {
+  if (validacao(valorVenda, valorCompra)) {
     return valorCompra - valorVenda;
   } else {
-    throw new Exception("Um dos valores é negativo");
+    throw new Exception("Um dos valores é negativo!");
   }
 }
 
@@ -73,6 +119,8 @@ double adicionarDescontoValorVenda(
 double adicionarAcrescimoValorVenda(
     double valorVendaProduto, double valorAcrescimo,
     [double percentualValorLimite = 0.20]) {
+  if (percentualValorLimite > 1)
+    percentualValorLimite = percentualValorLimite / 100;
   double valorLimiteAcrescimo = valorAcrescimo * percentualValorLimite;
   if (valorAcrescimo <= valorLimiteAcrescimo) {
     return valorVendaProduto + valorAcrescimo;
@@ -83,7 +131,11 @@ double adicionarAcrescimoValorVenda(
 
 // acrescenta produtos em estoque
 double acrescentarQuantidadeEstoque(
-    double quantidadeAtual, double quantidadeAcrescentada) {
+    double quantidadeAtual, double quantidadeAcrescentada,
+    {required Function validacao}) {
+  if (validacao(quantidadeAtual, quantidadeAcrescentada)) {
+    throw Exception("As quantidades tem que ser positivas");
+  }
   if (quantidadeAtual == null || quantidadeAcrescentada == null) {
     throw new Exception("Todos os valores devem ser preenchidos!");
   }
@@ -96,7 +148,5 @@ double diminuirQuantidadeEstoque(
   if (quantidadeAtual == null || quantidadeDiminuicao == null) {
     throw new Exception("Todos os valores devem ser preenchidos!");
   }
-  return quantidadeDiminuicao + quantidadeAtual;
+  return quantidadeAtual - quantidadeDiminuicao;
 }
-
-bool validarValorNegativo(double valor) => (valor < 0) ? false : true;
